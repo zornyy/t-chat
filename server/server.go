@@ -5,18 +5,25 @@ import (
 	"net"
 )
 
-func handleConnection(conn net.Conn) {
-	fmt.Println("Handling connection !")
+func handleConnection(conn net.Conn) error {
+	fmt.Println("Connection Added")
+
+	res, err := conn.Write([]byte(string("Hello dude !")))
+
+	if err != nil {
+		return fmt.Errorf("faild to write bytes. error: %w", err)
+	}
+
+	fmt.Printf("Wrote %d bytes to client\n", res)
+
+	return nil
 }
 
-func Start() {
-	fmt.Println("Server starting...")
-
+func Start() error {
 	listener, err := net.Listen("tcp", ":1080")
 
 	if err != nil {
-		fmt.Printf("Could not start server. Error: %s", err)
-		return
+		return fmt.Errorf("failed to start server. Error: %w", err)
 	}
 
 	fmt.Println("Server listening for new connections...")
@@ -25,8 +32,8 @@ func Start() {
 		conn, err := listener.Accept()
 
 		if err != nil {
-			fmt.Printf("Could not open connection. Error: %s", err)
-			return
+			// This might mean killing the server (I do no know yet). Perhaps the return should be removed to avoid killing the server here
+			return fmt.Errorf("failed to accept connection. Error: %w", err)
 		}
 
 		go handleConnection(conn)
