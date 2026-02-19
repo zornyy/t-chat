@@ -8,20 +8,12 @@ import (
 	"github.com/fatih/color"
 )
 
-func handleConnection(conn net.Conn) error {
+func handleConnection(conn net.Conn) {
 	color.Set(color.FgYellow)
 	fmt.Println("Attempting to read data from connection")
 	color.Unset()
 
-	for {
-		message, err := utils.ReadFromConnnection(conn)
-
-		if err != nil {
-			return fmt.Errorf("failed to read from socket. error: %w", err)
-		}
-
-		fmt.Printf("MSG: %s\n", message)
-	}
+	go utils.ReadMessages(conn)
 }
 
 func Start() {
