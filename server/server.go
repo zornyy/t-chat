@@ -9,14 +9,21 @@ import (
 func handleConnection(conn net.Conn) error {
 	fmt.Println("Connection Added")
 
-	n, err := utils.WriteToConnection("My amazing message", conn)
+	for {
+		message := utils.MessageInput()
+		if message == "quit" {
+			break
+		}
 
-	if err != nil {
-		return fmt.Errorf("faild to write bytes. error: %w", err)
+		n, err := utils.WriteToConnection(message, conn)
+		if err != nil {
+			return fmt.Errorf("faild to write bytes. error: %w", err)
+		}
+
+		fmt.Printf("Wrote %d bytes to client\n", n)
 	}
 
-	fmt.Printf("Wrote %d bytes to client\n", n)
-
+	conn.Close()
 	return nil
 }
 
@@ -37,6 +44,6 @@ func Start() error {
 			return fmt.Errorf("failed to accept connection. Error: %w", err)
 		}
 
-		go handleConnection(conn)
+		handleConnection(conn)
 	}
 }

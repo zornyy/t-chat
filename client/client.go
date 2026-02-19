@@ -13,15 +13,15 @@ func handleConnection(conn net.Conn) error {
 	fmt.Println("Attempting to read data from connection")
 	color.Unset()
 
-	message, err := utils.ReadFromConnnection(conn)
+	for {
+		message, err := utils.ReadFromConnnection(conn)
 
-	if err != nil {
-		return fmt.Errorf("failed to read from socket. error: %w", err)
+		if err != nil {
+			return fmt.Errorf("failed to read from socket. error: %w", err)
+		}
+
+		fmt.Printf("MSG: %s\n", message)
 	}
-
-	fmt.Printf("MSG: %s", message)
-	conn.Close()
-	return nil
 }
 
 func Start() {

@@ -1,13 +1,17 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"net"
+	"os"
 )
 
-func messageInput() string {
-	var msg string
-	fmt.Scanf("%s", &msg)
+func MessageInput() string {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("Me: ")
+	scanner.Scan()
+	msg := scanner.Text()
 
 	return msg
 }
