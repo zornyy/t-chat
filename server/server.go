@@ -2,19 +2,20 @@ package server
 
 import (
 	"fmt"
+	"go-chat/utils"
 	"net"
 )
 
 func handleConnection(conn net.Conn) error {
 	fmt.Println("Connection Added")
 
-	res, err := conn.Write([]byte(string("Hello dude !")))
+	n, err := utils.WriteToConnection("My amazing message", conn)
 
 	if err != nil {
 		return fmt.Errorf("faild to write bytes. error: %w", err)
 	}
 
-	fmt.Printf("Wrote %d bytes to client\n", res)
+	fmt.Printf("Wrote %d bytes to client\n", n)
 
 	return nil
 }

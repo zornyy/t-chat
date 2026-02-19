@@ -2,23 +2,26 @@ package client
 
 import (
 	"fmt"
+	"go-chat/utils"
 	"net"
+
+	"github.com/fatih/color"
 )
 
-func handleConnection(conn net.Conn) {
+func handleConnection(conn net.Conn) error {
+	color.Set(color.FgYellow)
 	fmt.Println("Attempting to read data from connection")
+	color.Unset()
 
-	buffer := make([]byte, 1024)
-
-	n, err := conn.Read(buffer)
+	message, err := utils.ReadFromConnnection(conn)
 
 	if err != nil {
-		fmt.Printf("failed to read from socket. error: %s", err)
-		return
+		return fmt.Errorf("failed to read from socket. error: %w", err)
 	}
 
-	fmt.Printf("Read %d bytes from server: %s", n, buffer)
+	fmt.Printf("MSG: %s", message)
 	conn.Close()
+	return nil
 }
 
 func Start() {
@@ -30,8 +33,7 @@ func Start() {
 		return
 	}
 
-	fmt.Println(conn)
-	defer conn.Close()
+	defer conn.Close() // Close the connection when it is no longer needed
 
 	handleConnection(conn)
 }
