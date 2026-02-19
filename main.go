@@ -1,20 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"go-chat/client"
-	"go-chat/server"
+	"go-chat/display"
 )
 
 func main() {
-	var i int
+	display.StartChatUI()
 
-	fmt.Print("Start go-chat Server (0) or Client (1) 0/1: ")
-	fmt.Scan(&i)
+	// var i int
 
-	if i == 0 {
-		server.Start()
-	} else {
-		client.Start()
-	}
+	// fmt.Print("Start go-chat Server (0) or Client (1) 0/1: ")
+	// fmt.Scan(&i)
+
+	// if i == 0 {
+	// 	server.Start()
+	// } else {
+	// 	client.Start()
+	// }
 }
