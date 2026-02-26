@@ -19,7 +19,7 @@ func handleConnection(conn net.Conn) {
 func Start(ip string, port int) {
 	fmt.Println("Attempting to connect to server...")
 
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", ip, port))
+	conn, err := net.Dial("tcp", net.JoinHostPort(ip, fmt.Sprintf("%d", port)))
 
 	if err != nil {
 		return

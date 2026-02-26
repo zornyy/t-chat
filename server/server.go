@@ -6,44 +6,32 @@ import (
 	"net"
 )
 
-func handleConnection(conn net.Conn) error {
-	fmt.Println("Connection Added")
-
-	for {
-		message := utils.MessageInput()
-		if message == "quit" {
-			break
-		}
-
-		n, err := utils.WriteToConnection(message, conn)
-		if err != nil {
-			return fmt.Errorf("faild to write bytes. error: %w", err)
-		}
-
-		fmt.Printf("Wrote %d bytes to client\n", n)
-	}
-
-	conn.Close()
-	return nil
+type Server struct {
+	listener   net.Listener
+	connection net.Conn
 }
 
-func Start(port int) error {
+func New(port int) (*Server, error) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-
 	if err != nil {
-		return fmt.Errorf("failed to start server. Error: %w", err)
+		return nil, fmt.Errorf("failed to start server. Error: %w", err)
 	}
+	return &Server{listener: listener}, nil
+}
 
+func (s *Server) Broadcast(message string) error {
+	_, err := utils.WriteToConnection(message, s.connection)
+
+	return err
+}
+
+func (s *Server) Start() error {
 	fmt.Println("Server listening for new connections...")
-
 	for {
-		conn, err := listener.Accept()
-
+		conn, err := s.listener.Accept()
 		if err != nil {
-			// This might mean killing the server (I do no know yet). Perhaps the return should be removed to avoid killing the server here
 			return fmt.Errorf("failed to accept connection. Error: %w", err)
 		}
-
-		handleConnection(conn)
+		s.connection = conn
 	}
 }

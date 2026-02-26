@@ -15,12 +15,17 @@ const PORT = 1080
 func main() {
 
 	var i int
-
 	fmt.Print("Start go-chat Server (0) or Client (1) 0/1: ")
 	fmt.Scan(&i)
 
 	if i == 0 {
-		go server.Start(PORT)
+		s, err := server.New(8080)
+		if err != nil {
+			fmt.Printf("error: %s", err)
+			return
+		}
+
+		go s.Start()
 	} else {
 		go client.Start(IP, PORT)
 	}
