@@ -16,10 +16,10 @@ func handleConnection(conn net.Conn) {
 	go utils.ReadMessages(conn)
 }
 
-func Start() {
+func Start(ip string, port int) {
 	fmt.Println("Attempting to connect to server...")
 
-	conn, err := net.Dial("tcp", "127.0.0.1:1080")
+	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", ip, port))
 
 	if err != nil {
 		return

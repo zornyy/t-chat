@@ -27,8 +27,8 @@ func handleConnection(conn net.Conn) error {
 	return nil
 }
 
-func Start() error {
-	listener, err := net.Listen("tcp", ":1080")
+func Start(port int) error {
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 
 	if err != nil {
 		return fmt.Errorf("failed to start server. Error: %w", err)
