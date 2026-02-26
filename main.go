@@ -53,7 +53,7 @@ func main() {
 	grid.AddItem(sideBar, 1, 0, 1, 1, 1, 0, false).
 		AddItem(messagesContainer, 1, 0, 1, 3, 0, 0, false)
 
-	if err := tview.NewApplication().SetRoot(grid, true).SetFocus(grid).Run(); err != nil {
+	if err := tview.NewApplication().SetRoot(grid, true).SetFocus(inputField).Run(); err != nil {
 		panic(err)
 	}
 }
