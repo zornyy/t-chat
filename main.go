@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"go-chat/client"
 	"go-chat/server"
+	"go-chat/utils"
+	"net"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -12,6 +14,10 @@ import (
 const IP = "127.0.0.1"
 const PORT = 1080
 
+var conn net.Conn
+
+// var c client.Client
+
 func main() {
 
 	var i int
@@ -19,15 +25,16 @@ func main() {
 	fmt.Scan(&i)
 
 	if i == 0 {
-		s, err := server.New(8080)
+		var err error
+		conn, err = server.Start(PORT)
 		if err != nil {
 			fmt.Printf("error: %s", err)
 			return
 		}
 
-		go s.Start()
 	} else {
-		go client.Start(IP, PORT)
+		client.Start(IP, PORT)
+		return
 	}
 
 	app := tview.NewApplication()
@@ -42,10 +49,12 @@ func main() {
 		SetLabel("-> ").
 		SetFieldWidth(0).
 		SetFieldTextColor(tcell.ColorBlack).
-		SetFieldBackgroundColor(tcell.ColorWhite).
-		SetDoneFunc(func(key tcell.Key) {
-			app.Stop()
-		})
+		SetFieldBackgroundColor(tcell.ColorWhite)
+
+	inputField.SetDoneFunc(func(key tcell.Key) {
+		utils.WriteToConnection(inputField.GetText(), conn)
+		inputField.SetText("")
+	})
 
 	msgIput := tview.NewFlex().
 		SetDirection(tview.FlexRow).

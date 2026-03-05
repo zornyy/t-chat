@@ -13,7 +13,7 @@ func handleConnection(conn net.Conn) {
 	fmt.Println("Attempting to read data from connection")
 	color.Unset()
 
-	go utils.ReadMessages(conn)
+	utils.ReadMessages(conn)
 }
 
 func Start(ip string, port int) {
