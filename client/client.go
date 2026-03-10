@@ -8,26 +8,18 @@ import (
 	"github.com/fatih/color"
 )
 
-func handleConnection(conn net.Conn) error {
+func handleConnection(conn net.Conn) {
 	color.Set(color.FgYellow)
 	fmt.Println("Attempting to read data from connection")
 	color.Unset()
 
-	for {
-		message, err := utils.ReadFromConnnection(conn)
-
-		if err != nil {
-			return fmt.Errorf("failed to read from socket. error: %w", err)
-		}
-
-		fmt.Printf("MSG: %s\n", message)
-	}
+	utils.ReadMessages(conn)
 }
 
-func Start() {
+func Start(ip string, port int) {
 	fmt.Println("Attempting to connect to server...")
 
-	conn, err := net.Dial("tcp", "127.0.0.1:1080")
+	conn, err := net.Dial("tcp", net.JoinHostPort(ip, fmt.Sprintf("%d", port)))
 
 	if err != nil {
 		return

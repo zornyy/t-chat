@@ -9,14 +9,14 @@ import (
 
 func MessageInput() string {
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println("Me: ")
+	fmt.Print("Me: ")
 	scanner.Scan()
 	msg := scanner.Text()
 
 	return msg
 }
 
-func ReadFromConnnection(conn net.Conn) (string, error) {
+func readFromConnnection(conn net.Conn) (string, error) {
 	buffer := make([]byte, 1024)
 	_, err := conn.Read(buffer)
 
@@ -25,6 +25,18 @@ func ReadFromConnnection(conn net.Conn) (string, error) {
 	}
 
 	return string(buffer), nil
+}
+
+func ReadMessages(conn net.Conn) error {
+	for {
+		message, err := readFromConnnection(conn)
+
+		if err != nil {
+			return fmt.Errorf("failed to read from socket. error: %w", err)
+		}
+
+		fmt.Printf("MSG: %s\n", message)
+	}
 }
 
 func WriteToConnection(message string, conn net.Conn) (int, error) {
